@@ -6,7 +6,13 @@ This is a sample project to demonstrate how to use Mendable API to build your ow
 
 ## Getting Started
 
-First, create a Mendable account at [https://mendable.ai](https://mendable.ai) and ingest your data.
+First, create a Mendable account at [https://mendable.ai](https://mendable.ai), ingest your data and grab your API key.
+
+Add your .env file with your Mendable API key:
+
+```bash
+MENDABLE_API_KEY=YOUR_MENDABLE_API_KEY
+```
 
 Then, install the dependencies:
 
@@ -14,11 +20,7 @@ Then, install the dependencies:
 npm install
 ```
 
-Add your .env file with your Mendable API key:
 
-```bash
-MENDABLE_API_KEY=YOUR_MENDABLE_API_KEY
-```
 
 Run the development server:
 
