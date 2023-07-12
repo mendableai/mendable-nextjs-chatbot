@@ -1,0 +1,42 @@
+import { AIStream, AIStreamCallbacks } from "ai";
+
+
+export interface MendableStreamCallbacks extends AIStreamCallbacks {
+  onMessage?: (data: string) => Promise<void>;
+}
+
+function parseMendableStream(): (data: string) => string | void {
+  return (data) => {
+    const parsedData = JSON.parse(data);
+    const chunk = parsedData.chunk;
+
+    if (chunk === "<|source|>" || chunk === "<|message_id|>") {
+      return;
+    }
+
+    if (chunk) {
+      return chunk;
+    }
+  };
+}
+
+export async function MendableStream(
+  data: any,
+  callbacks?: MendableStreamCallbacks
+) {
+  const url = "https://api.mendable.ai/v0/mendableChat";
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Accept: "text/event-stream",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Response error: " + (await response.text()));
+  }
+
+  return AIStream(response, parseMendableStream(), callbacks);
+}
