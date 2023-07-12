@@ -9,7 +9,7 @@ import { MessageCircle } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex bg-gray-50 min-h-screen items-center justify-center">
       <Popover>
         <PopoverContent align="start" className="w-[440px] mr-4">
           <Chat />

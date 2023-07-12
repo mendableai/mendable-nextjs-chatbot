@@ -2,7 +2,7 @@
 
 This is a sample project to demonstrate how to use Mendable API to build your own chatbot with Next.js.
 
-![](/public/chabot.png)
+![](/public/readmeHero.png)
 
 ## Getting Started
 
