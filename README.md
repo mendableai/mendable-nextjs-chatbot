@@ -1,4 +1,4 @@
-# Mendable Chat with Next.js
+# Mendable Chatbot with Next.js (Starter Kit)
 
 This is a sample project to demonstrate how to use Mendable API to build your own chatbot with Next.js.
 

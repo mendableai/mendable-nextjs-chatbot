@@ -14,6 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChat } from "ai/react";
 import { Grid } from "react-loader-spinner";
 import Bubble from "./chat/bubble";
+import { welcomeMessage } from "@/lib/strings";
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
@@ -48,7 +49,7 @@ export default function Chat() {
           <Bubble
             message={{
               role: "assistant",
-              content: " Hi, how can I help you today?",
+              content: welcomeMessage,
               id: "initialai",
             }}
           />
