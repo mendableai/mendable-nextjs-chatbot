@@ -43,7 +43,7 @@ export default function Chat() {
       <CardContent className="">
         <ScrollArea
           ref={scrollAreaRef}
-          className="h-[400px] overflow-y-auto w-full spacy-y-4 pr-4"
+          className="h-[450px] overflow-y-auto w-full spacy-y-4 pr-4"
         >
           <Bubble
             message={{
