@@ -14,18 +14,16 @@ Then, install the dependencies:
 npm install
 ```
 
-Run the development server:
-
-```bash
-npm run dev
-```
-
 Add your .env file with your Mendable API key:
 
 ```bash
 MENDABLE_API_KEY=YOUR_MENDABLE_API_KEY
 ```
 
+Run the development server:
+
+```bash
+npm run dev
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-
