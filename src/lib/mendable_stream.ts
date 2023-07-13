@@ -1,6 +1,5 @@
 import { AIStream, AIStreamCallbacks } from "ai";
 
-
 export interface MendableStreamCallbacks extends AIStreamCallbacks {
   onMessage?: (data: string) => Promise<void>;
 }

@@ -1,4 +1,4 @@
-# Mendable Chatbot with Next.js (Starter Kit)
+# Mendable Chatbot with Next.js (Starter Template)
 
 This is a sample project to demonstrate how to use Mendable API to build your own custom chatbot interface. Made with [Mendable](https://mendable.ai?ref=nextjs), [Next.js](https://vercel.com/solutions/nextjs), [Vercel AI SDK](https://vercel.com/blog/introducing-the-vercel-ai-sdk) and [shadcn/ui](https://ui.shadcn.com/).
 
