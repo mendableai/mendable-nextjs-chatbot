@@ -4,6 +4,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Message } from "ai";
 import { Grid } from "react-loader-spinner";
 import { cn } from "@/lib/utils";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm"
+import Image from "next/image";
+
 
 export default function Bubble({
   message,
@@ -12,6 +16,7 @@ export default function Bubble({
   message: Message;
   loading?: boolean;
 }) {
+  console.log(message.content)
   return (
     <div
       key={message.id}
@@ -35,9 +40,15 @@ export default function Bubble({
         </Avatar>
       )}
       {message.role === "assistant" && (
-        <Avatar className="w-8 h-8">
+        <Avatar className="w-8 h-8 border">
           {/* <AvatarFallback>M</AvatarFallback> */}
-          <div className={cn("rounded-full bg-gray-100 border p-1", loading && "animate-pulse")}>
+          <Image 
+            src="/muriya_logo.jpeg"
+            width={500}
+            height={500}
+            alt="Muriya"
+          />
+          {/* <div className={cn("rounded-full bg-gray-100 border p-1", loading && "animate-pulse")}>
             <svg
               stroke="none"
               fill="black"
@@ -54,7 +65,7 @@ export default function Bubble({
                 d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
               ></path>
             </svg>
-          </div>
+          </div> */}
         </Avatar>
       )}
 
@@ -62,7 +73,18 @@ export default function Bubble({
         <span className="block font-bold text-gray-700">
           {message.role === "user" ? "You" : "AI"}{" "}
         </span>
-        {!loading && message.content}
+        {!loading && (<ReactMarkdown
+          className="prose mt-1 w-full break-words prose-p:leading-relaxed"
+          remarkPlugins={[remarkGfm]}
+          components={{
+            // open links in new tab
+            a: (props) => (
+              <a {...props} target="_blank" rel="noopener noreferrer" />
+            ),
+          }}
+        >
+          {message.content}
+        </ReactMarkdown>)}
         {loading && (
           <Grid
             height={12}

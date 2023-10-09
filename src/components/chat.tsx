@@ -36,9 +36,9 @@ export default function Chat() {
   return (
     <Card className="w-[440px]">
       <CardHeader>
-        <CardTitle className="text-lg">Chatbot</CardTitle>
+        <CardTitle className="text-lg">Ask me anything!</CardTitle>
         <CardDescription className=" leading-3">
-          Powered by Mendable and Vercel
+          Powered by Kwonchin
         </CardDescription>
       </CardHeader>
       <CardContent className="">
