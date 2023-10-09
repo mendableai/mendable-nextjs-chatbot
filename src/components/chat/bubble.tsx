@@ -42,8 +42,8 @@ export default function Bubble({
       {message.role === "assistant" && (
         <Avatar className="w-8 h-8 border">
           {/* <AvatarFallback>M</AvatarFallback> */}
-          <Image 
-            src="/muriya_logo.jpeg"
+          <Image
+            src="/hawana_logo.jpeg"
             width={500}
             height={500}
             alt="Muriya"

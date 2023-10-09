@@ -34,7 +34,7 @@ export default function Chat() {
   }, [messages]);
 
   return (
-    <Card className="w-[440px]">
+    <Card className="w-[500px]">
       <CardHeader>
         <CardTitle className="text-lg">Ask me anything!</CardTitle>
         <CardDescription className=" leading-3">
