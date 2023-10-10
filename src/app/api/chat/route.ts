@@ -1,4 +1,3 @@
-import { Configuration, OpenAIApi } from "openai-edge";
 import { StreamingTextResponse } from "ai";
 import { MendableStream } from "@/lib/mendable_stream";
 import { welcomeMessage } from "@/lib/strings";

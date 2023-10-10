@@ -15,10 +15,17 @@ import { useChat } from "ai/react";
 import { Grid } from "react-loader-spinner";
 import Bubble from "./chat/bubble";
 import { welcomeMessage } from "@/lib/strings";
+import RecordingButton from "./recording-button";
 
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } =
-    useChat();
+  const {
+    messages,
+    input,
+    setInput,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+  } = useChat();
 
   // Create a reference to the scroll area
   const scrollAreaRef = useRef<null | HTMLDivElement>(null);
@@ -68,6 +75,7 @@ export default function Chat() {
             value={input}
             onChange={handleInputChange}
           />
+          <RecordingButton language="en" setInputText={setInput} />
           <Button disabled={isLoading}>
             {isLoading ? (
               <div className="flex gap-2 items-center">
