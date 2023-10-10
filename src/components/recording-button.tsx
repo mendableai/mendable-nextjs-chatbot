@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { LazyMotion, ResolvedValues, domAnimation, m } from "framer-motion";
 import { Loader2, StopCircle, Mic } from "lucide-react";
-import { useAtom, useAtomValue } from "jotai";
-import { recorderAtom, sessionIdAtom } from "@/atoms";
+import { useAtom } from "jotai";
+import { recorderAtom } from "@/atoms";
 import { Button } from "./ui/button";
 import { isAppleEnvironment } from "@/lib/utils";
 
@@ -16,7 +16,6 @@ interface ComponentProps {
 
 export default function RecordingButton(props: ComponentProps) {
   const { language, setInputText } = props;
-  // const sessionId = useAtomValue(sessionIdAtom);
   const [{ isRecording, status, shouldUpdateText }, setRecordingState] =
     useAtom(recorderAtom);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
