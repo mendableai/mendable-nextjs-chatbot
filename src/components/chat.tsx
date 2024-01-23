@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useSearchParams } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChat } from "ai/react";
 import { Grid } from "react-loader-spinner";
@@ -17,8 +18,13 @@ import Bubble from "./chat/bubble";
 import { welcomeMessage } from "@/lib/strings";
 
 export default function Chat() {
+  const searchParams = useSearchParams();
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
-    useChat();
+    useChat({
+      initialMessages: JSON.parse(
+        decodeURIComponent(searchParams.get("share") ?? "%5B%5D")
+      ),
+    });
 
   // Create a reference to the scroll area
   const scrollAreaRef = useRef<null | HTMLDivElement>(null);
@@ -40,6 +46,20 @@ export default function Chat() {
         <CardDescription className=" leading-3">
           Powered by Mendable and Vercel
         </CardDescription>
+        <Button
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              const tmp = new URL(window.location.href);
+              tmp.searchParams.set(
+                "share",
+                encodeURIComponent(JSON.stringify(messages))
+              );
+              navigator.clipboard.writeText(tmp.toString());
+            }
+          }}
+        >
+          Share
+        </Button>
       </CardHeader>
       <CardContent className="">
         <ScrollArea
