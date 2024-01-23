@@ -20,6 +20,7 @@ export default function RootLayout({
       <body className={inter.className}>
         {children}
         <Toaster />
+        <script defer src='/lz-string.min.js' />
       </body>
     </html>
   )

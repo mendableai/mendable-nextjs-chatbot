@@ -21,11 +21,12 @@ import { useToast } from "@/components/ui/use-toast";
 export default function Chat() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
+  const share = searchParams.get("share");
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
-      initialMessages: JSON.parse(
-        decodeURIComponent(searchParams.get("share") ?? "%5B%5D")
-      ),
+      initialMessages: share && LZString
+        ? JSON.parse(LZString.decompressFromEncodedURIComponent(share))
+        : [],
     });
 
   // Create a reference to the scroll area
@@ -55,7 +56,7 @@ export default function Chat() {
               const tmp = new URL(window.location.href);
               tmp.searchParams.set(
                 "share",
-                encodeURIComponent(JSON.stringify(messages))
+                LZString.compressToEncodedURIComponent(JSON.stringify(messages))
               );
               navigator.clipboard.writeText(tmp.toString()).then(() => {
                 toast({
