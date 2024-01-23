@@ -47,6 +47,7 @@ export default function Chat() {
           Powered by Mendable and Vercel
         </CardDescription>
         <Button
+          className="!mt-4"
           onClick={() => {
             if (typeof window !== "undefined") {
               const tmp = new URL(window.location.href);
