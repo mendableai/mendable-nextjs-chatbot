@@ -10,15 +10,26 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useSearchParams } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChat } from "ai/react";
 import { Grid } from "react-loader-spinner";
 import Bubble from "./chat/bubble";
 import { welcomeMessage } from "@/lib/strings";
+import { useToast } from "@/components/ui/use-toast";
+import { Share } from "lucide-react";
 
 export default function Chat() {
+  const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const share = searchParams.get("share");
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
-    useChat();
+    useChat({
+      initialMessages:
+        share && LZString
+          ? JSON.parse(LZString.decompressFromEncodedURIComponent(share))
+          : [],
+    });
 
   // Create a reference to the scroll area
   const scrollAreaRef = useRef<null | HTMLDivElement>(null);
@@ -36,7 +47,29 @@ export default function Chat() {
   return (
     <Card className="w-[440px]">
       <CardHeader>
-        <CardTitle className="text-lg">Chatbot</CardTitle>
+        <div className="flex flex-row items-start justify-between max-w-[100%]">
+          <CardTitle className="text-lg">Chatbot</CardTitle>
+          <Share
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                const tmp = new URL(window.location.href);
+                tmp.searchParams.set(
+                  "share",
+                  LZString.compressToEncodedURIComponent(
+                    JSON.stringify(messages)
+                  )
+                );
+                navigator.clipboard.writeText(tmp.toString()).then(() => {
+                  toast({
+                    description: "Conversation link copied to dashboard",
+                  });
+                });
+              }
+            }}
+            size={18}
+            className="cursor-pointer"
+          />
+        </div>
         <CardDescription className=" leading-3">
           Powered by Mendable and Vercel
         </CardDescription>
