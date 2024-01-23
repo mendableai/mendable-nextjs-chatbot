@@ -1,6 +1,10 @@
 "use client";
 import React from "react";
+import { renderToString } from "react-dom/server";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { AiOutlineTool, AiOutlineWarning } from "react-icons/ai";
+import { CgSpinner } from "react-icons/cg";
+import { BsLightningCharge } from "react-icons/bs";
 import { Message } from "ai";
 import { Grid } from "react-loader-spinner";
 import { cn } from "@/lib/utils";
@@ -62,7 +66,31 @@ export default function Bubble({
         <span className="block font-bold text-gray-700">
           {message.role === "user" ? "You" : "AI"}{" "}
         </span>
-        {!loading && message.content}
+        {!loading && (
+          <span
+            dangerouslySetInnerHTML={{
+              __html: message.content
+                .replaceAll(
+                  `<|loading_tools|>`,
+                  renderToString(
+                    <CgSpinner className="ms-mr-1 ms-animate-spin" size={20} />
+                  )
+                )
+                .replaceAll(
+                  `<|tool_called|>`,
+                  renderToString(
+                    <AiOutlineTool className="ms-mr-1" size={20} />
+                  )
+                )
+                .replaceAll(
+                  `<|tool_error|>`,
+                  renderToString(
+                    <AiOutlineWarning className="ms-mr-1" size={20} />
+                  )
+                ),
+            }}
+          />
+        )}
         {loading && (
           <Grid
             height={12}
