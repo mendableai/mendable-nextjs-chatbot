@@ -16,8 +16,10 @@ import { useChat } from "ai/react";
 import { Grid } from "react-loader-spinner";
 import Bubble from "./chat/bubble";
 import { welcomeMessage } from "@/lib/strings";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Chat() {
+  const { toast } = useToast();
   const searchParams = useSearchParams();
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
@@ -55,7 +57,11 @@ export default function Chat() {
                 "share",
                 encodeURIComponent(JSON.stringify(messages))
               );
-              navigator.clipboard.writeText(tmp.toString());
+              navigator.clipboard.writeText(tmp.toString()).then(() => {
+                toast({
+                  description: "Conversation link copied to dashboard",
+                });
+              });
             }
           }}
         >
