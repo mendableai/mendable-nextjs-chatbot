@@ -41,7 +41,12 @@ export default function Bubble({
       {message.role === "assistant" && (
         <Avatar className="w-8 h-8">
           {/* <AvatarFallback>M</AvatarFallback> */}
-          <div className={cn("rounded-full bg-gray-100 border p-1", loading && "animate-pulse")}>
+          <div
+            className={cn(
+              "rounded-full bg-gray-100 border p-1",
+              loading && "animate-pulse"
+            )}
+          >
             <svg
               stroke="none"
               fill="black"
@@ -69,25 +74,26 @@ export default function Bubble({
         {!loading && (
           <span
             dangerouslySetInnerHTML={{
-              __html: message.content
-                .replaceAll(
-                  `<|loading_tools|>`,
-                  renderToString(
-                    <CgSpinner className="ms-mr-1 ms-animate-spin" size={20} />
-                  )
-                )
-                .replaceAll(
-                  `<|tool_called|>`,
-                  renderToString(
-                    <AiOutlineTool className="ms-mr-1" size={20} />
-                  )
-                )
-                .replaceAll(
-                  `<|tool_error|>`,
-                  renderToString(
-                    <AiOutlineWarning className="ms-mr-1" size={20} />
-                  )
-                ),
+              __html: message.content.endsWith("|>")
+                ? message.content
+                    .replaceAll(
+                      `<|loading_tools|>`,
+                      renderToString(
+                        <CgSpinner className="animate-spin" size={20} />
+                      )
+                    )
+                    .replaceAll(
+                      `<|tool_called|>`,
+                      renderToString(<AiOutlineTool size={20} />)
+                    )
+                    .replaceAll(
+                      `<|tool_error|>`,
+                      renderToString(<AiOutlineWarning size={20} />)
+                    )
+                : message.content
+                    .replaceAll(`<|loading_tools|>`, "")
+                    .replaceAll(`<|tool_called|>`, "")
+                    .replaceAll(`<|tool_error|>`, ""),
             }}
           />
         )}
