@@ -23,11 +23,13 @@ export default function Chat() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const share = searchParams.get("share");
+  //@ts-ignore
+  const lzstring = LZString;
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
       initialMessages:
-        share && LZString
-          ? JSON.parse(LZString.decompressFromEncodedURIComponent(share))
+        share && lzstring
+          ? JSON.parse(lzstring.decompressFromEncodedURIComponent(share))
           : [],
     });
 
@@ -55,7 +57,7 @@ export default function Chat() {
                 const tmp = new URL(window.location.href);
                 tmp.searchParams.set(
                   "share",
-                  LZString.compressToEncodedURIComponent(
+                  lzstring.compressToEncodedURIComponent(
                     JSON.stringify(messages)
                   )
                 );
