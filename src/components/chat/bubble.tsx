@@ -78,8 +78,11 @@ export default function Bubble({
                     .replaceAll(
                       `<|loading_tools|>`,
                       renderToString(
-                        <div className="my-2">
+                        <div className="my-2 flex items-center gap-1">
                           <CgSpinner className="animate-spin" size={20} />
+                          <span className="">
+                              Loading tools...
+                            </span>
                         </div>
                       )
                     )
@@ -93,7 +96,7 @@ export default function Bubble({
                       /\<\|tool_called[\s\S]*\$\$/g,
                       renderToString(
                         <>
-                          <div className="my-2 flex flex-row">
+                          <div className="my-2 flex flex-row items-center">
                             {message.content.split("$$")[2] === "false" ? (
                               <AiOutlineTool size={20} />
                             ) : (
