@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { renderToString } from "react-dom/server";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar } from "../ui/avatar";
 import { AiOutlineTool, AiOutlineWarning } from "react-icons/ai";
 import { CgSpinner } from "react-icons/cg";
 import { BsLightningCharge } from "react-icons/bs";
@@ -66,7 +66,6 @@ export default function Bubble({
           </div>
         </Avatar>
       )}
-
       <p className="leading-relaxed">
         <span className="block font-bold text-gray-700">
           {message.role === "user" ? "You" : "AI"}{" "}
@@ -79,21 +78,38 @@ export default function Bubble({
                     .replaceAll(
                       `<|loading_tools|>`,
                       renderToString(
-                        <CgSpinner className="animate-spin" size={20} />
+                        <div className="my-2">
+                          <CgSpinner className="animate-spin" size={20} />
+                        </div>
                       )
-                    )
-                    .replaceAll(
-                      `<|tool_called|>`,
-                      renderToString(<AiOutlineTool size={20} />)
                     )
                     .replaceAll(
                       `<|tool_error|>`,
                       renderToString(<AiOutlineWarning size={20} />)
                     )
                 : message.content
-                    .replaceAll(`<|loading_tools|>`, "")
-                    .replaceAll(`<|tool_called|>`, "")
-                    .replaceAll(`<|tool_error|>`, ""),
+                    .replaceAll(`<|tool_error|>`, "")
+                    .replaceAll(
+                      /\<\|tool_called[\s\S]*\$\$/g,
+                      renderToString(
+                        <>
+                          <div className="my-2 flex flex-row">
+                            {message.content.split("$$")[2] === "false" ? (
+                              <AiOutlineTool size={20} />
+                            ) : (
+                              <BsLightningCharge
+                                className="ms-mr-1 ms-fill-yellow-400"
+                                size={18}
+                              />
+                            )}
+                            <span className="ml-1">
+                              {message.content.split("$$")[1]}
+                            </span>
+                          </div>
+                        </>
+                      )
+                    )
+                    .replaceAll(`<|loading_tools|>`, ""),
             }}
           />
         )}

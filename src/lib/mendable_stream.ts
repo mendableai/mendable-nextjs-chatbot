@@ -11,13 +11,11 @@ function parseMendableStream(): (data: string) => string | void {
 
     // TODO: handle source and message_id to provide sources to the users
     // More info here: https://docs.mendable.ai/mendable-api/chat
-    if (chunk === "<|source|>" || chunk === "<|message_id|>") {
-      return;
-    }
+    if (chunk === "<|source|>" || chunk === "<|message_id|>") return;
 
-    if (chunk) {
-      return chunk;
-    }
+    if (chunk === "<|tool_called|>") return `<|tool_called|>$$${parsedData.metadata.name}$$${parsedData.metadata.is_action}$$`
+
+    if (chunk) return chunk;
   };
 }
 
