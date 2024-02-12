@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
+import { useEnsureRegeneratorRuntime } from "@/app/hooks/useEnsureRegeneratorRuntime";
 import {
   Card,
   CardContent,
@@ -10,16 +9,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useSearchParams } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useChat } from "ai/react";
-import { Grid } from "react-loader-spinner";
-import Bubble from "./chat/bubble";
-import { welcomeMessage } from "@/lib/strings";
 import { useToast } from "@/components/ui/use-toast";
+import { welcomeMessage } from "@/lib/strings";
+import { useChat } from "ai/react";
 import { Share } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { useSpeechRecognition } from "react-speech-recognition";
+import Bubble from "./chat/bubble";
+import SendButton from "./chat/send-button";
 
 export default function Chat() {
+  const formRef = useRef(null);
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const share = searchParams.get("share");
@@ -32,12 +34,27 @@ export default function Chat() {
           ? JSON.parse(lzstring.decompressFromEncodedURIComponent(share))
           : [],
     });
+  const { transcript } = useSpeechRecognition();
 
-  // Create a reference to the scroll area
+  useEnsureRegeneratorRuntime();
+
+  useEffect(() => {
+    if (transcript) {
+      updateInputWithTranscript(transcript);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transcript]);
+
+  const updateInputWithTranscript = (transcriptValue: string) => {
+    const fakeEvent: any = {
+      target: { value: transcriptValue },
+    };
+    handleInputChange(fakeEvent as React.ChangeEvent<HTMLInputElement>);
+  };
+
   const scrollAreaRef = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
-    // Scroll to the bottom when the messages change
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({
         top: scrollAreaRef.current.scrollHeight,
@@ -95,7 +112,11 @@ export default function Chat() {
       </CardContent>
       <CardFooter>
         <form
-          onSubmit={handleSubmit}
+          ref={formRef}
+          onSubmit={(event) => {
+            handleSubmit(event);
+            updateInputWithTranscript("");
+          }}
           className="flex items-center justify-center w-full space-x-2"
         >
           <Input
@@ -103,23 +124,7 @@ export default function Chat() {
             value={input}
             onChange={handleInputChange}
           />
-          <Button disabled={isLoading}>
-            {isLoading ? (
-              <div className="flex gap-2 items-center">
-                <Grid
-                  height={12}
-                  width={12}
-                  radius={5}
-                  ariaLabel="grid-loading"
-                  color="#fff"
-                  ms-visible={true}
-                />
-                {"Loading..."}
-              </div>
-            ) : (
-              "Send"
-            )}
-          </Button>
+          <SendButton isLoading={isLoading} formRef={formRef} />
         </form>
       </CardFooter>
     </Card>
