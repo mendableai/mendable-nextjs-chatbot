@@ -76,3 +76,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+.mendable-textarea::-webkit-scrollbar {
+  width: 3px;
+}
+
+.mendable-textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mendable-textarea::-webkit-scrollbar-thumb {
+  background-color: black;
+}

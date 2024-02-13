@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
+import { useEnsureRegeneratorRuntime } from "@/app/hooks/useEnsureRegeneratorRuntime";
 import {
   Card,
   CardContent,
@@ -9,15 +8,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { useSearchParams } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useChat } from "ai/react";
-import { Grid } from "react-loader-spinner";
-import Bubble from "./chat/bubble";
-import { welcomeMessage } from "@/lib/strings";
 import { useToast } from "@/components/ui/use-toast";
+import { welcomeMessage } from "@/lib/strings";
+import { useChat } from "ai/react";
 import { Share } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
+import Bubble from "./chat/bubble";
+import SendForm from "./chat/send-form";
 
 export default function Chat() {
   const { toast } = useToast();
@@ -32,12 +31,13 @@ export default function Chat() {
           ? JSON.parse(lzstring.decompressFromEncodedURIComponent(share))
           : [],
     });
+ 
 
-  // Create a reference to the scroll area
+  useEnsureRegeneratorRuntime();
+
   const scrollAreaRef = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
-    // Scroll to the bottom when the messages change
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({
         top: scrollAreaRef.current.scrollHeight,
@@ -94,33 +94,12 @@ export default function Chat() {
         </ScrollArea>
       </CardContent>
       <CardFooter>
-        <form
-          onSubmit={handleSubmit}
-          className="flex items-center justify-center w-full space-x-2"
-        >
-          <Input
-            placeholder="Type your message"
-            value={input}
-            onChange={handleInputChange}
-          />
-          <Button disabled={isLoading}>
-            {isLoading ? (
-              <div className="flex gap-2 items-center">
-                <Grid
-                  height={12}
-                  width={12}
-                  radius={5}
-                  ariaLabel="grid-loading"
-                  color="#fff"
-                  ms-visible={true}
-                />
-                {"Loading..."}
-              </div>
-            ) : (
-              "Send"
-            )}
-          </Button>
-        </form>
+        <SendForm
+          input={input}
+          handleSubmit={handleSubmit}
+          isLoading={isLoading}
+          handleInputChange={handleInputChange}
+        />
       </CardFooter>
     </Card>
   );
