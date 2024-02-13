@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/components/ui/use-toast";
 import { welcomeMessage } from "@/lib/strings";
@@ -16,12 +15,10 @@ import { useChat } from "ai/react";
 import { Share } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { useSpeechRecognition } from "react-speech-recognition";
 import Bubble from "./chat/bubble";
-import SendButton from "./chat/send-button";
+import SendForm from "./chat/send-form";
 
 export default function Chat() {
-  const formRef = useRef(null);
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const share = searchParams.get("share");
@@ -34,23 +31,9 @@ export default function Chat() {
           ? JSON.parse(lzstring.decompressFromEncodedURIComponent(share))
           : [],
     });
-  const { transcript } = useSpeechRecognition();
+ 
 
   useEnsureRegeneratorRuntime();
-
-  useEffect(() => {
-    if (transcript) {
-      updateInputWithTranscript(transcript);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transcript]);
-
-  const updateInputWithTranscript = (transcriptValue: string) => {
-    const fakeEvent: any = {
-      target: { value: transcriptValue },
-    };
-    handleInputChange(fakeEvent as React.ChangeEvent<HTMLInputElement>);
-  };
 
   const scrollAreaRef = useRef<null | HTMLDivElement>(null);
 
@@ -111,21 +94,12 @@ export default function Chat() {
         </ScrollArea>
       </CardContent>
       <CardFooter>
-        <form
-          ref={formRef}
-          onSubmit={(event) => {
-            handleSubmit(event);
-            updateInputWithTranscript("");
-          }}
-          className="flex items-center justify-center w-full space-x-2"
-        >
-          <Input
-            placeholder="Type your message"
-            value={input}
-            onChange={handleInputChange}
-          />
-          <SendButton isLoading={isLoading} formRef={formRef} />
-        </form>
+        <SendForm
+          input={input}
+          handleSubmit={handleSubmit}
+          isLoading={isLoading}
+          handleInputChange={handleInputChange}
+        />
       </CardFooter>
     </Card>
   );
