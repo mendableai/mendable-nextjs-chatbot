@@ -1,12 +1,11 @@
 import { useEnsureRegeneratorRuntime } from "@/app/hooks/useEnsureRegeneratorRuntime";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Grid } from "react-loader-spinner";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { MicIcon } from "../icons/mic-icon";
-import { XIcon } from "../icons/x-icon";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
 
@@ -25,7 +24,10 @@ export default function SendForm({
 }: SendForm) {
   useEnsureRegeneratorRuntime();
 
+  const [textareaHeight, setTextareaHeight] = useState("h-10");
+
   const textareaRef = useRef(null);
+
   const {
     listening,
     browserSupportsSpeechRecognition,
@@ -42,15 +44,26 @@ export default function SendForm({
   }, [browserSupportsSpeechRecognition]);
 
   useEffect(() => {
-    if (listening) {
-      const textarea = document.querySelector(".mendable-textarea");
-      if (textarea) {
+    const textarea = document.querySelector(".mendable-textarea");
+    if (textarea) {
+      if (input === "") {
+        resetTranscript();
+        setTextareaHeight("h-10");
+      } else {
+        const shouldExpand =
+          textarea.scrollHeight > textarea.clientHeight &&
+          textareaHeight !== "h-20";
+        if (shouldExpand) {
+          setTextareaHeight("h-20");
+        }
+      }
+
+      if (listening) {
         textarea.scrollTop = textarea.scrollHeight;
       }
     }
-  }, [listening, input]);
+  }, [listening, input, textareaHeight]);
 
-  // This listener stops the speech recognition when the tab is not visible
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden" && listening) {
@@ -103,23 +116,17 @@ export default function SendForm({
             listening ? "text-red-500 scale-125 animate-pulse" : "text-gray-500"
           } dark:text-gray-400 hover:scale-125 cursor-pointer`}
         />
-        <XIcon
-          onClick={() => {
-            updateInputWithTranscript("");
-            resetTranscript();
-          }}
-          className="absolute right-8 h-4 w-4 top-1/2 transform -translate-y-2 text-gray-500 dark:text-gray-400 cursor-pointer hover:scale-125"
-        />
+
         <Textarea
           value={input}
           onChange={handleInputChange}
-          className="pr-12 resize-none mendable-textarea"
+          className={`pr-8 resize-none mendable-textarea min-h-[20px] ${textareaHeight}`}
           placeholder="Type a message..."
           ref={textareaRef}
         />
       </div>
 
-      <Button className="h-full">
+      <Button className="h-10">
         {isLoading ? (
           <div className="flex gap-2 items-center">
             <Grid
