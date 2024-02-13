@@ -114,7 +114,7 @@ export default function SendForm({
           value={input}
           onChange={handleInputChange}
           className="pr-12 resize-none mendable-textarea"
-          placeholder="Search"
+          placeholder="Type a message..."
           ref={textareaRef}
         />
       </div>
